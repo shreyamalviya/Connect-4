@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-// import 'package:connect4/logic.dart';
+import 'package:connect4/logic.dart';
 
 class UIElements extends StatefulWidget {
   _UIElementsState createState() => _UIElementsState();
@@ -15,7 +15,6 @@ class _UIElementsState extends State<UIElements> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           getGameBoard(),
-          // getPlayButtons(),
           getBlankSpace(50),
           getRestartButton(),
           getBlankSpace(50),
@@ -26,8 +25,9 @@ class _UIElementsState extends State<UIElements> {
   }
 
   final mainColor = Colors.yellow.shade700;
-  int colsCount = 7;
-  int rowsCount = 6;
+  final int colsCount = 7;
+  final int rowsCount = 6;
+  final players = List.unmodifiable(["red", "blue"]);
   var playedMoves = {"red": [], "blue": []};
   var playerTurn = "red";
 
@@ -41,13 +41,23 @@ class _UIElementsState extends State<UIElements> {
         children: List.generate(
           rowsCount * colsCount,
           (index) {
+            var slotColor = Colors.white60;
+            if (playedMoves["red"].contains(index))
+              slotColor = Colors.redAccent.shade700;
+            if (playedMoves["blue"].contains(index))
+              slotColor = Colors.blueAccent.shade700;
+
             return InkWell(
-              onTap: null,
+              onTap: () => setState(
+                () {
+                  playMove(this, index);
+                },
+              ),
               child: Container(
                 color: mainColor,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white60,
+                    color: slotColor,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: mainColor,
@@ -63,32 +73,17 @@ class _UIElementsState extends State<UIElements> {
     );
   }
 
-  // getPlayButtons() {
-  //   List<Widget> buttons = List<Widget>();
-  //   var numCols = 7;
-  //   for (var i = 0; i < numCols; i++) {
-  //     buttons.add(
-  //       Container(
-  //         child: FloatingActionButton(
-  //           elevation: 0.0,
-  //           child: Icon(Icons.arrow_drop_up, color: mainColor),
-  //           tooltip: 'Column ${i + 1}',
-  //           backgroundColor: Colors.transparent,
-  //           onPressed: null,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return Row(
-  //       children: buttons, mainAxisAlignment: MainAxisAlignment.spaceEvenly);
-  // }
-
   getRestartButton() {
     return FloatingActionButton(
       child: Icon(Icons.replay, size: 30.0),
       backgroundColor: mainColor,
       foregroundColor: Colors.black87,
-      onPressed: () {},
+      onPressed: () => setState(
+        () {
+          playedMoves["red"].clear();
+          playedMoves["blue"].clear();
+        },
+      ),
     );
   }
 
