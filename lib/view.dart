@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:connect4/logic.dart';
@@ -151,6 +152,100 @@ class _UIElementsState extends State<UIElements> {
                 ),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  showEndGamePopUp() {
+    var winner = playerTurn;
+    var winnerColor = winner == "blue"
+        ? Colors.blueAccent.shade700
+        : Colors.redAccent.shade700;
+    var winMsg = "$winner wins!".toUpperCase();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return Container(
+          height: 500,
+          width: 500,
+          child: SimpleDialog(
+            shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(28.0),
+            ),
+            backgroundColor: Colors.grey.shade300,
+            elevation: 4.0,
+            title: Center(
+              child: Text(
+                winMsg,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: winnerColor,
+                  fontSize: 40.0,
+                  height: 1.5,
+                ),
+              ),
+            ),
+            children: <Widget>[
+              Center(
+                child: ButtonBar(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      width: 125,
+                      child: RaisedButton(
+                        color: Colors.grey.shade200,
+                        elevation: 3.0,
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(
+                            () {
+                              playedMoves["red"].clear();
+                              playedMoves["blue"].clear();
+                            },
+                          );
+                        },
+                        child: Center(
+                          child: Text(
+                            "Play again",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: 125,
+                      child: RaisedButton(
+                        color: Colors.grey.shade200,
+                        elevation: 3.0,
+                        onPressed: () => exit(0),
+                        child: Center(
+                          child: Text(
+                            "Exit",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18.0,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },
