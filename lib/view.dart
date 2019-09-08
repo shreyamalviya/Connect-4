@@ -25,15 +25,16 @@ class _UIElementsState extends State<UIElements> {
     );
   }
 
-  final mainColor = Colors.yellow.shade700;
+  final mainColor = Colors.blue.shade600;
   final int colsCount = 7;
   final int rowsCount = 6;
-  final players = List.unmodifiable(["red", "blue"]);
-  var playedMoves = {"red": [], "blue": []};
+  final players = List.unmodifiable(["red", "yellow"]);
+  var playedMoves = {"red": [], "yellow": []};
   var playerTurn = "red";
 
   getGameBoard() {
     return Container(
+      alignment: Alignment.center,
       width: MediaQuery.of(context).size.width * (7 / 8),
       height: MediaQuery.of(context).size.height * (3 / 8),
       child: GridView.count(
@@ -42,11 +43,11 @@ class _UIElementsState extends State<UIElements> {
         children: List.generate(
           rowsCount * colsCount,
           (index) {
-            var slotColor = Colors.white60;
+            var slotColor = Colors.white70;
             if (playedMoves["red"].contains(index))
-              slotColor = Colors.redAccent.shade700;
-            if (playedMoves["blue"].contains(index))
-              slotColor = Colors.blueAccent.shade700;
+              slotColor = Colors.redAccent.shade400;
+            if (playedMoves["yellow"].contains(index))
+              slotColor = Colors.yellowAccent.shade400;
 
             return InkWell(
               onTap: () => setState(
@@ -78,11 +79,11 @@ class _UIElementsState extends State<UIElements> {
     return FloatingActionButton(
       child: Icon(Icons.replay, size: 30.0),
       backgroundColor: mainColor,
-      foregroundColor: Colors.black87,
+      foregroundColor: Colors.white,
       onPressed: () => setState(
         () {
           playedMoves["red"].clear();
-          playedMoves["blue"].clear();
+          playedMoves["yellow"].clear();
         },
       ),
     );
@@ -111,7 +112,7 @@ class _UIElementsState extends State<UIElements> {
               ),
               icon: Icon(Icons.help_outline, size: 30.0),
               backgroundColor: mainColor,
-              foregroundColor: Colors.black87,
+              foregroundColor: Colors.white,
               onPressed: getHowToPlay,
             ),
           ),
@@ -135,13 +136,25 @@ class _UIElementsState extends State<UIElements> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24.0,
+                    fontSize: 26.0,
                     height: 3,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 AutoSizeText(
-                  'Be the first player to get 4 of your colored checkers in a row either horizontally, vertically or diagonally!',
+                  '\nBe the first player to get 4 of your colored checkers in a ' +
+                      'row either horizontally, vertically or diagonally!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    inherit: true,
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    height: 1.5,
+                  ),
+                ),
+                AutoSizeText(
+                  '\nTap on a column and your disc will occupy the lowest ' +
+                      'available space within the column.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     inherit: true,
@@ -160,9 +173,8 @@ class _UIElementsState extends State<UIElements> {
 
   showEndGamePopUp() {
     var winner = playerTurn;
-    var winnerColor = winner == "blue"
-        ? Colors.blueAccent.shade700
-        : Colors.redAccent.shade700;
+    var winnerColor =
+        winner == "yellow" ? Colors.yellow.shade800 : Colors.red.shade600;
     var winMsg = "$winner wins!".toUpperCase();
 
     showDialog(
@@ -173,8 +185,8 @@ class _UIElementsState extends State<UIElements> {
           height: 500,
           width: 500,
           child: SimpleDialog(
-            shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(28.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
             ),
             backgroundColor: Colors.grey.shade300,
             elevation: 4.0,
@@ -205,7 +217,7 @@ class _UIElementsState extends State<UIElements> {
                           setState(
                             () {
                               playedMoves["red"].clear();
-                              playedMoves["blue"].clear();
+                              playedMoves["yellow"].clear();
                             },
                           );
                         },
